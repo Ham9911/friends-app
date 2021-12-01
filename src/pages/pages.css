@@ -1,0 +1,28 @@
+
+.container {
+    width: 350px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0px 0px 0px 490px;
+    border: 2px solid White;
+    border-radius: 15px;
+    background: white;
+}
+.logo {
+    margin-bottom: 15px;
+    margin-top: 0px;
+    padding-top: 0;
+}
+.ant-form-item-control-input-content {
+    flex: inherit;
+    max-width: 100;
+    align-items: center;
+    width: 100%;
+    margin:auto
+}
+.ant-form-item-control-input{
+    width: 100%;
+}
