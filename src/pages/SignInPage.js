@@ -20,7 +20,7 @@ const SignInPage = () => {
         const user = userCredential.user;
         console.log(user.email,user.password)
         navigate('/home')
-        addUser(); //Set User On FireStore
+        // addUser(); //Set User On FireStore
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -48,13 +48,13 @@ const SignInPage = () => {
           }
         });
       },[])
-     //Adding User on FireStore
-      const addUser = async () => {
-        console.log(LoggedinUser);
-        let userRef = collection(db, 'user');
-        console.log(userRef)
-        await addDoc(userRef, LoggedinUser);
-    }
+    //  //Adding User on FireStore
+    //   const addUser = async () => {
+    //     console.log(LoggedinUser);
+    //     let userRef = collection(db, 'user');
+    //     console.log(userRef)
+    //     await addDoc(userRef, LoggedinUser);
+    // }
 
     return (
         <div>
