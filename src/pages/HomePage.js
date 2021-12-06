@@ -16,11 +16,13 @@ import { Button, Radio, Form, Select, Space, Input, DatePicker } from "antd";
 const HomePage = () => {
 
   let userInfo = {
-    username:null,
-    contactno:null,
-    about:null,
-    dob:null,
-    gender:null
+    email:'',
+    lastLoggedin:'',
+    username:'',
+    contactno:'',
+    about:'',
+    dob:'',
+    gender:''
   };
   let valForm={};
   let username;
@@ -29,11 +31,11 @@ const HomePage = () => {
   const { Option } = Select;
   function onChange(date, dateString) {
     console.log(date, dateString);
-    userInfo.dob = dateString;
+    // userInfo.dob = dateString;
   }
   const onGenderChange = (value) => {
   console.log(value);
-  userInfo.gender=value;
+  // userInfo.gender=value;
   }
   // const userNameHandler=(e)=>{
   // console.log(e.target.value);
@@ -42,31 +44,6 @@ const HomePage = () => {
 // }
 
 
-
-  // //Image Upload
-  // const props = {
-  //   name: 'file',
-  //   action: 'http://localhost:3000/home#API',
-  //   headers: {
-  //     authorization: 'authorization-text',
-  //   },
-  //   onChange(info) {
-  //       console.log(info)
-  //     if (info.file.status !== 'uploading') {
-  //       console.log(info.file, info.fileList);
-  //     }
-  //     if (info.file.status === 'done') {
-  //       message.success(`${info.file.name} file uploaded successfully`);
-  //     } else if (info.file.status === 'error') {
-  //       message.error(`${info.file.name} file upload failed.`);
-  //     }
-  //   }
-  // };
-
-  //Ant Radio
-
-  //
-
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -74,7 +51,6 @@ const HomePage = () => {
         // https://firebase.google.com/docs/reference/js/firebase.User
         const email = user.email;
         const lastLoggedin = new Date();
-        user.lastLoggedin = lastLoggedin;
         console.log(email, lastLoggedin);
         userInfo.email = email;
         userInfo.lastLoggedin = lastLoggedin;
@@ -93,16 +69,18 @@ const HomePage = () => {
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
     userInfo.username=values.user
+    console.log(userInfo.username)
     userInfo.contactno=values.contactno
     userInfo.about=values.about
     console.log(userInfo);
     addUserProfile();
-     // userInfo=valForm;
+
   }; 
   //Adding User on FireStore
   const addUserProfile =  () => {
     let userProfileRef = collection(db, "userProfiles");
     console.log(userProfileRef);
+
      addDoc(userProfileRef, userInfo);
   
   };

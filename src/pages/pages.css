@@ -12,6 +12,41 @@
     background: white;
     box-shadow: 0px 0px 10px grey;
 }
+#intro
+    {
+        width: 350px;
+        height: 400px;
+        display: flex;
+        flex-direction: column;
+        justify-content: left;
+        align-items: left;
+        margin: 0px 0px 0px 10px;
+        border: 1px solid White;
+        border-radius: 15px;
+        background: white;
+        box-shadow: 0px 0px 2px grey;
+    }
+#edit-Profile{
+    position: absolute;
+    right: 30px;
+    
+
+}
+.boxes{
+    background-color: rgb(168, 168, 168);
+        display: absolute;
+        margin:14px 13px 0px 8px;
+        border: 1px solid White;
+        border-radius: 0px grey;
+        background: white;
+        box-shadow: 0px 0px 2px grey;
+}
+.sub-heading{
+    text-align: left;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: medium;
+    font-weight: bold;
+}
 .top-bar{
     font-family: 'Times New Roman', Times, serif;
     font-size: large;
