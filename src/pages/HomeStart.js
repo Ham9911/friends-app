@@ -78,6 +78,10 @@ console.log(currUser);
           <div className='boxes'>About: {myUsers.about}</div>
         </div>
       </div>
+      <div>
+        <h2 className='sub-heading'
+        >My Posts</h2>
+        </div>
     </div>
   );
 };
