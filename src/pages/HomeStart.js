@@ -64,6 +64,9 @@ const HomeStart = () => {
         </Button>
       </div>
       <div id="intro">
+        <div>
+        <img src='./images.jpg' alt='Image is Here'></img>
+        </div>
         <div><h2 className='sub-heading'
         >Intro</h2></div>
         <div>
