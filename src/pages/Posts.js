@@ -1,12 +1,13 @@
 
-import { collection, addDoc, onAuthStateChanged, db } from "./FirebaseApp";
+import { auth,collection, addDoc, onAuthStateChanged, db,query,getDocs } from "./FirebaseApp";
 import React from "react";
 import { Form, Input, InputNumber, Button } from 'antd';
+import { useEffect,useState } from "react";
 const Posts = () => {
   let post = {
-    title: "Apartment Therapy",
-    content:
-      "Apartment Therapy is a blog focusing on interior design. It was launched by Maxwell Ryan in 2001. Ryan is an interior designer who turned to blogging (using the moniker “the apartment therapist”). The blog has reached 20 million followers and has expanded into a full-scale media company.",
+    title:'',
+    content:'',
+    postedBy:'',
   }
   const layout = {
     labelCol: {
@@ -16,22 +17,34 @@ const Posts = () => {
       span: 12,
     },
   };
-  /* eslint-disable no-template-curly-in-string */
-  
-  const validateMessages = {
-    required: '${label} is required!',
-    types: {
-      email: '${label} is not a valid email!',
-      number: '${label} is not a valid number!',
-    },
-    number: {
-      range: '${label} must be between ${min} and ${max}',
-    },
-  };
   const onFinish = (values) => {
     console.log(values);
+    post.content=values.content;
+    post.title=values.post;
+    console.log(post);
     addPosts();
   }
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        const email = user.email;
+        console.log(email);
+        post.postedBy = email;
+  
+        // ...
+      } else {
+        // User is signed out
+        // ...
+        console.log("no user has logged in");
+      }
+    });
+  }, [onFinish]);
+
+    
+  
+  
   //Adding Posts on FireStore
  
   const addPosts = () => {
@@ -39,8 +52,25 @@ const Posts = () => {
     console.log(postsRef);
     addDoc(postsRef, post);
   };
+ let fetchedpost;
+ let arr=[];
+ let newarr=[];
+  const [allpost, setallPost] = useState([]);
+  useEffect(async () => {
+    let postData = collection(db, "Posts");
+    console.log(postData);
+    let q = query(postData);
 
-
+    fetchedpost = await getDocs(q);
+    console.log(fetchedpost);
+    fetchedpost.forEach((doc) => {
+      arr = doc.data();
+        newarr.push(arr);
+      console.log(newarr);
+    });
+    setallPost(newarr);
+  }, []);
+console.log(allpost);
   return(
    <div>
        <div className='top-bar ' style={{fontSize:'30px'}}>Posts</div>
@@ -54,12 +84,24 @@ const Posts = () => {
     
       <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
         <Button type="primary" htmlType="submit">
-          Submit
+          Post
         </Button>
       </Form.Item>  </Form>
       </div>
       <div>
-          Old posts
+          All posts
+      </div>
+      <div>
+          {allpost.map((data)=>{
+              return(
+              <div> <div>Post Title: {data.title}</div>
+              <div>Created By: {data.postedBy}</div>
+             <div> Post content:{data.content}</div>
+              
+              </div>
+              
+              )
+          })}
       </div>
    </div>
    

@@ -14,18 +14,18 @@ import {
 } from "./FirebaseApp";
 import "./pages.css";
 const HomeStart = () => {
-  let currUser;
   let navigate = useNavigate();
   const onEditHandler = () => {
     navigate("/form");
   };
+  const[currUser,setcurrUser]=useState('')
   onAuthStateChanged(auth, (user) => {
     if (user) {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/firebase.User
       console.log("isLoggedin", user.email);
 
-      currUser = user.email;
+      setcurrUser(user.email);
 
       // ...
     } else {
@@ -34,15 +34,16 @@ const HomeStart = () => {
       console.log("no user has logged in");
     }
   });
-  let user;
-  let arr;
+console.log(currUser);
+  let arr=[];
+  let user=[];
   const [myUsers, setMyUsers] = useState([]);
   useEffect(async () => {
     let userData = collection(db, "userProfiles");
     console.log(userData);
-    let q = query(userData, where("email", "==", "hammad@123.com"));
-
-    user = await getDocs(q);
+    console.log(currUser);
+    let q = query(userData, where("email", "==", 'hammad@123.com'));
+    user =  await getDocs(q);
     console.log(user);
     user.forEach((doc) => {
       arr = doc.data();
@@ -70,6 +71,7 @@ const HomeStart = () => {
         <div><h2 className='sub-heading'
         >Intro</h2></div>
         <div>
+          <div>{currUser}</div>
           <div className='boxes'>Email: {myUsers.email}</div>
           <div className='boxes'>Date of Birth: {myUsers.dob}</div>
           <div className='boxes'>Phone No: {myUsers.contactno}</div>
