@@ -35,10 +35,11 @@ const HomePage = () => {
   console.log(value);
   userInfo.gender=value;
   }
-  const userNameHandler=(e)=>{
-  console.log(e.target.value);
-  username=e.target.value;
-  }
+  // const userNameHandler=(e)=>{
+  // console.log(e.target.value);
+  // username=e.target.value;
+// userInfo.username=username; 
+// }
 
 
 
@@ -90,30 +91,30 @@ const HomePage = () => {
  
  
   const onFinish = (values) => {
-    console.log("Received values of form: ", values.gender);
+    console.log("Received values of form: ", values);
     userInfo.username=values.user
     userInfo.contactno=values.contactno
     userInfo.about=values.about
     console.log(userInfo);
-    userInfo=valForm;
+    addUserProfile();
+     // userInfo=valForm;
   }; 
   //Adding User on FireStore
-  useEffect(()=>{})
-  const addUserProfile = async () => {
-    console.log(valForm);
+  const addUserProfile =  () => {
     let userProfileRef = collection(db, "userProfiles");
     console.log(userProfileRef);
-    await addDoc(userProfileRef, valForm);
+     addDoc(userProfileRef, userInfo);
+  
   };
 
- const addValues=()=>{
-
- }
+//  const addValues=()=>{
+//     console.log(userInfo);
+   
+//     addUserProfile();
+//  }
 
   const addDatatoFireStore=()=>{
-    console.log(userInfo);
-   
-    addUserProfile();
+
   }
 
   console.log(userInfo);
@@ -157,7 +158,7 @@ const HomePage = () => {
          
               rules={[{ required: true, message: "Username is required" }]}
             >
-              <Input onChange={userNameHandler} style={{ width: 160 }} placeholder="Please input" />
+              <Input  style={{ width: 160 }} placeholder="Please input" />
             </Form.Item>
           </Space>
         </Form.Item>
@@ -208,7 +209,7 @@ const HomePage = () => {
           </Input.Group>
         </Form.Item>
         <Form.Item label=" " colon={false}>
-          <Button type="primary" htmlType="submit" onClick={addValues,onFinish} >
+          <Button type="primary" htmlType="submit" onClick={onFinish} >
             Submit
           </Button>
         </Form.Item>

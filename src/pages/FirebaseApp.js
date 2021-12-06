@@ -15,6 +15,13 @@ const firebaseApp = initializeApp({
 const auth = getAuth();
 const db = getFirestore(firebaseApp);
 
+const setData = (user) => {
+  db.collection('userProfiles').doc(user.email).get().then((querySnapshot) => {
+      const data = querySnapshot.data();
+      return data;
+  });
+}
+
 export {
     auth,
     createUserWithEmailAndPassword,
@@ -30,5 +37,6 @@ export {
     collection,
     getDocs,
     query,
-    where
+    where,
+    setData
 };
