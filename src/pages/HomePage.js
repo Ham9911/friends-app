@@ -19,10 +19,10 @@ const HomePage = () => {
     email:'',
     lastLoggedin:'',
     username:'',
+    dob:'',
+    gender:'',
     contactno:'',
     about:'',
-    dob:'',
-    gender:''
   };
   let valForm={};
   let username;
@@ -31,11 +31,11 @@ const HomePage = () => {
   const { Option } = Select;
   function onChange(date, dateString) {
     console.log(date, dateString);
-    // userInfo.dob = dateString;
+    userInfo.dob = dateString;
   }
   const onGenderChange = (value) => {
   console.log(value);
-  // userInfo.gender=value;
+  userInfo.gender=value;
   }
   // const userNameHandler=(e)=>{
   // console.log(e.target.value);
@@ -66,36 +66,28 @@ const HomePage = () => {
 
  
  
-  const onFinish = (values) => {
+  const onFinish = (values,) => {
     console.log("Received values of form: ", values);
-    userInfo.username=values.user
-    console.log(userInfo.username)
+    userInfo.username=values.username
     userInfo.contactno=values.contactno
     userInfo.about=values.about
-    console.log(userInfo);
     addUserProfile();
-
   }; 
-  //Adding User on FireStore
+  console.log(userInfo);
+ 
+
   const addUserProfile =  () => {
     let userProfileRef = collection(db, "userProfiles");
     console.log(userProfileRef);
-
+    console.log('Setting data on Firebase')
      addDoc(userProfileRef, userInfo);
+     navigate('/home');
   
   };
 
-//  const addValues=()=>{
-//     console.log(userInfo);
-   
-//     addUserProfile();
-//  }
+ 
+  //Adding User on FireStore
 
-  const addDatatoFireStore=()=>{
-
-  }
-
-  console.log(userInfo);
   //Ant Design Form Items
   function UserSignOut() {
     signOut(auth)
@@ -131,9 +123,8 @@ const HomePage = () => {
         <Form.Item label="Username">
           <Space>
             <Form.Item
-              name="user"
+              name="username"
               noStyle
-         
               rules={[{ required: true, message: "Username is required" }]}
             >
               <Input  style={{ width: 160 }} placeholder="Please input" />
@@ -187,7 +178,7 @@ const HomePage = () => {
           </Input.Group>
         </Form.Item>
         <Form.Item label=" " colon={false}>
-          <Button type="primary" htmlType="submit" onClick={onFinish} >
+          <Button type="primary" htmlType="submit" >
             Submit
           </Button>
         </Form.Item>

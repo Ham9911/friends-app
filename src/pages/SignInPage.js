@@ -7,12 +7,18 @@ import { UserOutlined, LockOutlined,LoginOutlined } from '@ant-design/icons';
 import './pages.css'
 import { Link } from 'react-router-dom';
 import { auth, signInWithEmailAndPassword,collection,addDoc,onAuthStateChanged, db } from "./FirebaseApp";
+let setUser=()=>{}
 const SignInPage = () => {
   let navigate = useNavigate()
   const onFinish = (values) => {
     console.log('Received values of form: ', values);
     const email = values.email;
     const password = values.password;
+       setUser=()=>{
+      let user=email;
+      return user;
+    }
+    setUser(email);
     console.log(email, password);
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -55,6 +61,8 @@ const SignInPage = () => {
     //     console.log(userRef)
     //     await addDoc(userRef, LoggedinUser);
     // }
+
+  
 
     return (
         <div>
@@ -117,5 +125,5 @@ const SignInPage = () => {
         </div>
     )
 }
-
+export {setUser}
 export default SignInPage

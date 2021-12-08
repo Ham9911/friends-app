@@ -84,18 +84,18 @@ console.log(allpost);
     
       <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
         <Button type="primary" htmlType="submit">
-          Post
+          Submit
         </Button>
       </Form.Item>  </Form>
       </div>
       <div>
-          All posts
+          Old posts
       </div>
       <div>
           {allpost.map((data)=>{
               return(
               <div> <div>Post Title: {data.title}</div>
-              <div>Created By: {data.postedBy}</div>
+              <div>Created By: {data.title}</div>
              <div> Post content:{data.content}</div>
               
               </div>
