@@ -3,8 +3,11 @@ import { auth, signOut } from "./FirebaseApp";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Button } from "antd";
+import { getDownloadURL,ref, uploadBytes } from "firebase/storage"
+import { } from './FirebaseApp'
 import {
   collection,
+  storage,
   query,
   where,
   getDocs,
@@ -15,8 +18,10 @@ import {
 import "./pages.css";
 import { setUser } from "./SignInPage";
 const HomeStart = () => {
+  const[image,setimage]=useState();
   let navigate = useNavigate();
   let LoggedinUser=setUser();
+  let imageURL;
   localStorage.setItem('user',JSON.stringify(setUser()));
   let data=JSON.parse(localStorage.getItem('user'));
   console.log(data);
@@ -52,8 +57,32 @@ const HomeStart = () => {
     user = await getDocs(q);
     console.log(user);
     user.forEach((doc) => {
-      arr = doc.data();
+      // arr = doc.data();
+      currUser=localStorage.getItem('loginUseruid')
+      getDownloadURL(ref(storage, `images/${currUser}`))
+      .then((url) => {
+          // `url` is the download URL for 'images/stars.jpg'
 
+          // This can be downloaded directly:
+          const xhr = new XMLHttpRequest();
+          xhr.responseType = 'blob';
+          xhr.onload = (event) => {
+              const blob = xhr.response;
+          };
+          xhr.open('GET', url);
+          xhr.send();
+
+          // Or inserted into an <img> element
+          // const img = document.getElementById('myimg');
+          // img.setAttribute('src', url);
+          console.log(url)
+          setimage(url);
+          // localStorage.setItem('profileimage2',url)
+      })
+      .catch((error) => {
+          // Handle any errors
+          console.log(error)
+      });
       // arr.push(doc.data());
       // console.log(arr);
     });
@@ -78,7 +107,6 @@ const HomeStart = () => {
     setallPost(newarr);
   }, []);
 console.log(allpost);
-
   return (
     <div className="main">
       <div className="top-bar">
@@ -92,13 +120,13 @@ console.log(allpost);
       <div className='intro-section'>
         <div id="intro">
           <div>
-            <img src="./images.jpg" alt="Image is Here"></img>
+            <img src={image} style={{width:'200px'}} alt="Image is Here"></img>
           </div>
           <div>
             <h2 className="sub-heading">Intro</h2>
           </div>
           <div>
-            <div>{}</div>
+            <div></div>
             <div className="boxes">Email: {myUsers.email}</div>
             <div className="boxes">Date of Birth: {myUsers.dob}</div>
             <div className="boxes">Phone No: {myUsers.contactno}</div>
