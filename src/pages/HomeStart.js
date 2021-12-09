@@ -57,7 +57,7 @@ const HomeStart = () => {
     user = await getDocs(q);
     console.log(user);
     user.forEach((doc) => {
-      // arr = doc.data();
+      arr = doc.data();
       currUser=localStorage.getItem('loginUseruid')
       getDownloadURL(ref(storage, `images/${currUser}`))
       .then((url) => {
