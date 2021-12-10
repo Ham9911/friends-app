@@ -3,7 +3,7 @@ import { Form, Input, Button, Checkbox } from 'antd';
 import './pages.css'
 import { UserAddOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import { auth, createUserWithEmailAndPassword } from './FirebaseApp';
+import { auth, createUserWithEmailAndPassword,setDoc,doc,db } from './FirebaseApp';
 
 const SignUpPage = () => {
     let userDetails={};
@@ -11,14 +11,18 @@ const SignUpPage = () => {
           let password='';
     const onFinish = (values) => {
         console.log('Success:', values);
-        userDetails=values;
-        email=userDetails.email;
-        password=userDetails.password;
         createUserWithEmailAndPassword(auth, email, password)
           .then((userCredential) => {
             // Signed in 
             const user = userCredential.user;
             console.log(user);
+            user.displayName = values.username
+            setDoc(doc(db, "users", user.uid), {
+            name: values.username,
+            email: values.email,
+            uid: user.uid,
+            profileimage:''
+        });
             // ...
           })
           .catch((error) => {

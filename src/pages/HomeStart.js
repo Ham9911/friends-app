@@ -14,6 +14,9 @@ import {
   onAuthStateChanged,
   db,
   setData,
+  doc,
+  setDoc
+  
 } from "./FirebaseApp";
 import "./pages.css";
 import { setUser } from "./SignInPage";
@@ -23,6 +26,7 @@ const HomeStart = () => {
   let LoggedinUser=setUser();
   let imageURL;
   localStorage.setItem('user',JSON.stringify(setUser()));
+  
   let data=JSON.parse(localStorage.getItem('user'));
   console.log(data);
   console.log(LoggedinUser);
@@ -35,8 +39,8 @@ const HomeStart = () => {
     if (user) {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/firebase.User
-      console.log("isLoggedin", user.email)
-
+      console.log("isLoggedin", user)
+      localStorage.setItem('uid',user.uid);
       // ...
     } else {
       // User is signed out
@@ -48,41 +52,29 @@ const HomeStart = () => {
   let arr = [];
   let user = [];
  
-  useEffect( async() => {
-    let userData = collection(db, "userProfiles");
-    console.log(userData);
+  useEffect(async () => {
     let currUser=LoggedinUser
+    currUser=JSON.parse(localStorage.getItem('loginUseruid'))
     console.log(currUser)
-    let q = query(userData, where("email", "==",data));
+    let userData = collection(db, "users");
+    let q = query(userData, where("uid", "==",`${currUser}`));
     user = await getDocs(q);
-    console.log(user);
-    user.forEach((doc) => {
-      arr = doc.data();
-      currUser=localStorage.getItem('loginUseruid')
-      getDownloadURL(ref(storage, `images/${currUser}`))
-      .then((url) => {
-          // `url` is the download URL for 'images/stars.jpg'
-
-          // This can be downloaded directly:
-          const xhr = new XMLHttpRequest();
-          xhr.responseType = 'blob';
-          xhr.onload = (event) => {
-              const blob = xhr.response;
-          };
-          xhr.open('GET', url);
-          xhr.send();
-
-          // Or inserted into an <img> element
-          // const img = document.getElementById('myimg');
-          // img.setAttribute('src', url);
-          console.log(url)
-          setimage(url);
-          // localStorage.setItem('profileimage2',url)
-      })
-      .catch((error) => {
-          // Handle any errors
-          console.log(error)
-      });
+   console.log(user); 
+    user.forEach((docs) => {
+      console.log(docs.data())
+      arr = docs.data();
+      console.log(arr);
+    //   // getDownloadURL(ref(storage, `images/${currUser}`))
+      // .then((url) => {
+      //     // `url` is the download URL for 'images/stars.jpg'
+      //     // img.setAttribute('src', url);
+      //     console.log(url)
+      //     setimage(url);
+      // })
+      // .catch((error) => {
+      //     // Handle any errors
+      //     console.log(error)
+      // });
       // arr.push(doc.data());
       // console.log(arr);
     });

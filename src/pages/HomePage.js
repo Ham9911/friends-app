@@ -9,7 +9,9 @@ import {
   auth,
   storage,
   storageRef,
+  doc,
   imagesRef,
+  setDoc,
   signOut,
 } from "./FirebaseApp";
 import {
@@ -84,12 +86,7 @@ const [form] = AntForm.useForm();
  
  
   const onFinish = (values) => {
-    currUser=localStorage.getItem('logginUser');
-    console.log("Received values of form: ", values);
-    userInfo.username=values.username
-    userInfo.contactno=values.contactno
-    userInfo.about=values.about
-    addUserProfile();
+    //Image Upload Start
     const file = values.upload[0].originFileObj;
     console.log(file)
     // Points to 'images/space.jpg'
@@ -113,6 +110,32 @@ const [form] = AntForm.useForm();
         console.log('Uploaded a blob or file!');
         onReset();
     });
+    //Image Upload End
+
+    getDownloadURL(ref(storage, `images/${currUser}`))
+      .then((url) => {
+          // `url` is the download URL for 'images/stars.jpg'
+          // img.setAttribute('src', url);
+          console.log(url)
+          userInfo.pic=url;
+          console.log(userInfo.pic);
+          setDoc(doc(db, "users", currUser), {
+            profileimage:userInfo.pic
+          },{ merge: true });
+          console.log('Pic Uploaded')
+      })
+    currUser=localStorage.getItem('logginUser');
+    console.log("Received values of form: ", values);
+    userInfo.username=values.username
+    userInfo.contactno=values.contactno
+    userInfo.about=values.about
+    setDoc(doc(db, "users", currUser), {
+      username:values.username,
+    contactno:values.contactno,about:values.about,dob:userInfo.dob,gender:userInfo.gender,uid:currUser
+    },{ merge: true });
+   console.log('Done')
+    navigate('/home');
+
   }; 
 
   const onReset = () => {
@@ -132,11 +155,13 @@ const normFile = (e) => {
  
 
   const addUserProfile =  () => {
-    let userProfileRef = collection(db, "userProfiles");
-    console.log(userProfileRef);
+    // let userProfileRef = collection(db, "user");
+    // console.log(userProfileRef);
+    navigate('/home');
     console.log('Setting data on Firebase')
-     addDoc(userProfileRef, userInfo);
-     navigate('/home');
+   
+    //  addDoc(userProfileRef, userInfo);
+    
   
   };
 
