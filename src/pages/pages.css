@@ -42,6 +42,12 @@
     }
 #edit-Profile{
     position: absolute;
+    right: 80px;
+    
+
+}
+#signout{
+    position: absolute;
     right: 0px;
     
 
@@ -54,6 +60,20 @@
         border-radius: 0px grey;
         background: white;
         box-shadow: 0px 0px 2px grey;
+}
+.post-section{
+    height: auto;
+}
+
+.post-section .boxes{
+    background-color: rgb(168, 168, 168);
+        display: absolute;
+        margin:14px 13px 0px 8px;
+        border: 1px solid White;
+        border-radius: 0px grey;
+        background: white;
+        box-shadow: 0px 0px 2px grey;
+        font-weight: bolder;
 }
 .intro-section{
    width : 70%;

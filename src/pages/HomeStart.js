@@ -2,45 +2,35 @@ import React from "react";
 import { auth, signOut } from "./FirebaseApp";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Button } from "antd";
+import { Button,Input, Space } from "antd";
 import { getDownloadURL,ref, uploadBytes } from "firebase/storage"
 import { } from './FirebaseApp'
 import {
   collection,
-  storage,
   query,
   where,
   getDocs,
+  getDoc,
   onAuthStateChanged,
   db,
-  setData,
   doc,
-  setDoc
-  
 } from "./FirebaseApp";
 import "./pages.css";
 import { setUser } from "./SignInPage";
+import { AudioOutlined } from '@ant-design/icons';
 const HomeStart = () => {
-  const[image,setimage]=useState();
-  let navigate = useNavigate();
-  let LoggedinUser=setUser();
-  let imageURL;
-  localStorage.setItem('user',JSON.stringify(setUser()));
-  
-  let data=JSON.parse(localStorage.getItem('user'));
-  console.log(data);
-  console.log(LoggedinUser);
-  const onEditHandler = () => {
-    navigate("/form");
-  };
-  const [myUsers, setMyUsers] = useState([]);
-
+  let presentUser;
+  const { Search } = Input;
+  const onSearch = searchvalue => console.log(searchvalue);
   onAuthStateChanged(auth, (user) => {
     if (user) {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/firebase.User
-      console.log("isLoggedin", user)
-      localStorage.setItem('uid',user.uid);
+      console.log(user);
+      // console.log(email, lastLoggedin);
+localStorage.setItem('logginUser',user.uid)
+localStorage.setItem('user',user.email);
+presentUser=user.email;
       // ...
     } else {
       // User is signed out
@@ -49,96 +39,105 @@ const HomeStart = () => {
     }
   });
 
-  let arr = [];
-  let user = [];
- 
-  useEffect(async () => {
-    let currUser=LoggedinUser
-    currUser=JSON.parse(localStorage.getItem('loginUseruid'))
-    console.log(currUser)
-    let userData = collection(db, "users");
-    let q = query(userData, where("uid", "==",`${currUser}`));
-    user = await getDocs(q);
-   console.log(user); 
-    user.forEach((docs) => {
-      console.log(docs.data())
-      arr = docs.data();
-      console.log(arr);
-    //   // getDownloadURL(ref(storage, `images/${currUser}`))
-      // .then((url) => {
-      //     // `url` is the download URL for 'images/stars.jpg'
-      //     // img.setAttribute('src', url);
-      //     console.log(url)
-      //     setimage(url);
-      // })
-      // .catch((error) => {
-      //     // Handle any errors
-      //     console.log(error)
-      // });
-      // arr.push(doc.data());
-      // console.log(arr);
-    });
-    setMyUsers(arr);
-  }, []);
-  console.log(myUsers);
-  let fetchedpost;
- let arr2=[];
- let newarr=[];
+  let currUser=localStorage.getItem('logginUser')
+  let navigate = useNavigate();
+  let LoggedinUser=setUser();
+  
+  const onEditHandler = () => {
+    navigate("/form");
+  };
+  const logoutHandler=()=>{
+    navigate('/');
+  }
+  const addpostHandler=()=>{  navigate("/Posts");}
+  const [myUsers, setMyUsers] = useState([]);
   const [allpost, setallPost] = useState([]);
+  
+  let arr = [];
+ console.log(presentUser)
   useEffect(async () => {
-    let postData = collection(db, "Posts");
+    presentUser=localStorage.getItem('logginUser')
+const docRef = doc(db, "users", presentUser);
+const docSnap = await getDoc(docRef);
+if (docSnap.exists()) {
+  console.log("Document data:", docSnap.data());
+  arr=docSnap.data();
+  setMyUsers(arr);
+} else {
+  // doc.data() will be undefined in this case
+  console.log("No such document!");
+}
+}, []);
+  console.log(myUsers);
+ let arr2=[];
+//For Post
+let fetchedpost;
+  let arr3 = [];
+  let newarr = [];
+  useEffect(async () => {
+    let postData = query(collection(db, "Posts"),where('uid','==',currUser));
     console.log(postData);
-    let q = query(postData,where("postedBy", "==",data));
+    let q = query(postData);
+
     fetchedpost = await getDocs(q);
     console.log(fetchedpost);
     fetchedpost.forEach((doc) => {
-      arr2 = doc.data();
-        newarr.push(arr2);
+      arr3 = doc.data();
+      newarr.push(arr3);
       console.log(newarr);
     });
     setallPost(newarr);
   }, []);
-console.log(allpost);
+  console.log(allpost);
   return (
     <div className="main">
       <div className="top-bar">
         <h1>Friends App</h1>
       </div>
-      <div>
+      <div> 
         <Button id="edit-Profile" onClick={onEditHandler}>
           Edit Profile
+        </Button>
+        <Button id="signout" onClick={logoutHandler}>
+        Logout
         </Button>
       </div>
       <div className='intro-section'>
         <div id="intro">
           <div>
-            <img src={image} style={{width:'200px'}} alt="Image is Here"></img>
+            <img ></img>
+            <img src={myUsers.profileimage} style={{width:'200px', height:'200px'}}></img>
           </div>
           <div>
             <h2 className="sub-heading">Intro</h2>
           </div>
           <div>
             <div></div>
-            <div className="boxes">Email: {myUsers.email}</div>
+            <div className="boxes">UserName: {myUsers.username}</div>
             <div className="boxes">Date of Birth: {myUsers.dob}</div>
             <div className="boxes">Phone No: {myUsers.contactno}</div>
             <div className="boxes">About: {myUsers.about}</div>
           </div>
         </div>
       </div>
+      <Search placeholder="input search text" onSearch={onSearch} style={{ width: 200 }} />
+      <span><Button style={{marginBottom:'4px'}} onClick={addpostHandler}>Add Post</Button></span>
+      
 <div className='post-section'>
       <div>
         <h2 className="sub-heading">My Posts</h2>
       </div>
       <div>
-      {allpost.map((data)=>{
+      {allpost.map((posts,index)=>{
+        console.log(posts);
+       
               return(
-              <div> <div>Post Title: {data.title}</div>
-              <div>Created By: {data.postedBy}</div>
-             <div> Post content:{data.content}</div>
-              
-              </div>
-              
+              <div> 
+                <div className="boxes"><img src={posts.image} style={{width:'200px',height:'150px'}}></img></div>
+                <div className="boxes">Post Title: {posts.title}</div>
+              <div className="boxes">Created By: {posts.createdby}</div>
+             <div  className="boxes"> Post content:{posts.content}</div>
+              </div>  
               )
           })}
       </div>

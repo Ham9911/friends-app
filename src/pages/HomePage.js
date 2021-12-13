@@ -1,16 +1,13 @@
 import React from "react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  collection,
-  addDoc,
   onAuthStateChanged,
   db,
   auth,
   storage,
   storageRef,
   doc,
-  imagesRef,
   setDoc,
   signOut,
 } from "./FirebaseApp";
@@ -33,8 +30,6 @@ const HomePage = () => {
     about:'',
   };
   let currUser;
-  let valForm={};
-  let username;
   let navigate = useNavigate();
   //Ant Design Form Items
   const { Option } = Select;
@@ -46,14 +41,7 @@ const HomePage = () => {
   console.log(value);
   userInfo.gender=value;
   }
-  // const userNameHandler=(e)=>{
-  // console.log(e.target.value);
-  // username=e.target.value;
-// userInfo.username=username; 
-// }
 const [form] = AntForm.useForm();
-    // console.log('Success:', values.upload.file, values.upload.file.name);
-
     const formItemLayout = {
         labelCol: { span: 4 },
         wrapperCol: { span: 14 }
@@ -63,7 +51,6 @@ const [form] = AntForm.useForm();
         wrapperCol: { span: 14, offset: 4 },
     };
 
-  useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         // User is signed in, see docs for a list of available properties
@@ -81,11 +68,12 @@ const [form] = AntForm.useForm();
         console.log("no user has logged in");
       }
     });
-  }, []);
+
 
  
  
   const onFinish = (values) => {
+    currUser=localStorage.getItem('logginUser');
     //Image Upload Start
     const file = values.upload[0].originFileObj;
     console.log(file)
@@ -108,23 +96,30 @@ const [form] = AntForm.useForm();
     // 'file' comes from the Blob or File API
     uploadBytes(storageRefagain, file).then((snapshot) => {
         console.log('Uploaded a blob or file!');
+        setImage();
+        setValuestoUser();
         onReset();
+        navigate('/home');
     });
     //Image Upload End
 
+  //Set in Firebase User
+  const setImage=()=>{
     getDownloadURL(ref(storage, `images/${currUser}`))
-      .then((url) => {
-          // `url` is the download URL for 'images/stars.jpg'
-          // img.setAttribute('src', url);
-          console.log(url)
-          userInfo.pic=url;
-          console.log(userInfo.pic);
-          setDoc(doc(db, "users", currUser), {
-            profileimage:userInfo.pic
-          },{ merge: true });
-          console.log('Pic Uploaded')
-      })
-    currUser=localStorage.getItem('logginUser');
+        .then((url) => {
+            // `url` is the download URL for 'images/stars.jpg'
+            // img.setAttribute('src', url);
+            console.log(url)
+            userInfo.pic=url;
+            console.log(userInfo.pic);
+            setDoc(doc(db, "users", currUser), {
+              profileimage:userInfo.pic
+            },{ merge: true });
+            console.log('Pic Uploaded')
+        })
+  } 
+  //Setting Values to user
+  const setValuestoUser=()=>{
     console.log("Received values of form: ", values);
     userInfo.username=values.username
     userInfo.contactno=values.contactno
@@ -134,10 +129,10 @@ const [form] = AntForm.useForm();
     contactno:values.contactno,about:values.about,dob:userInfo.dob,gender:userInfo.gender,uid:currUser
     },{ merge: true });
    console.log('Done')
-    navigate('/home');
+  
 
   }; 
-
+  }
   const onReset = () => {
     form.resetFields();
 };
@@ -150,25 +145,6 @@ const normFile = (e) => {
     }
     return e && e.fileList;
 };
-
-  console.log(userInfo);
- 
-
-  const addUserProfile =  () => {
-    // let userProfileRef = collection(db, "user");
-    // console.log(userProfileRef);
-    navigate('/home');
-    console.log('Setting data on Firebase')
-   
-    //  addDoc(userProfileRef, userInfo);
-    
-  
-  };
-
-
- 
-  //Adding User on FireStore
-
   //Ant Design Form Items
   function UserSignOut() {
     signOut(auth)
@@ -180,8 +156,6 @@ const normFile = (e) => {
         // An error happened.
       });
   }
-  
-
   return (
     <div>
       <Button icon={<LogoutOutlined />} type="primary" onClick={UserSignOut}>
@@ -194,13 +168,6 @@ const normFile = (e) => {
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
       >
-        {/* Image Upload */}
-        {/* <Form.Item label="Upload Image">
-    <Upload {...props}>
-    <Button icon={<UploadOutlined />}>Click to Upload</Button>
-  </Upload>
-  </Form.Item> */}
-        {/* Image Upload */}
         <Form.Item
                     name="upload"
                     label="Upload"

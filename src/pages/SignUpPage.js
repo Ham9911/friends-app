@@ -8,10 +8,10 @@ import { auth, createUserWithEmailAndPassword,setDoc,doc,db } from './FirebaseAp
 const SignUpPage = () => {
     let userDetails={};
     let email='';
-          let password='';
+    let password='';
     const onFinish = (values) => {
         console.log('Success:', values);
-        createUserWithEmailAndPassword(auth, email, password)
+        createUserWithEmailAndPassword(auth, values.email, values.password)
           .then((userCredential) => {
             // Signed in 
             const user = userCredential.user;

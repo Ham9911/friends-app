@@ -23,6 +23,7 @@ const SignInPage = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in 
+        console.log(userCredential)
         const user = userCredential.user;
         console.log(user.email,user.password)
         navigate('/home')
