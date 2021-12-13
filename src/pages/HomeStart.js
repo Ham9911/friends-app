@@ -21,32 +21,34 @@ import { AudioOutlined } from '@ant-design/icons';
 const HomeStart = () => {
   let presentUser;
   let searchResult='';
-  let fetchedData=[];
-  const [inputSearch,setinputSearch]=useState('')
-  const { Search } = Input;
-  const onSearch = searchvalue => {
-  console.log(searchvalue);
-  setinputSearch(searchvalue);
-  }
-  const [search,setSearch]=useState('');
-let arr4=[];
-let newarr2=[];
-  useEffect(async () => {
-    console.log(inputSearch);
-    let searchData = query(collection(db,"users"),where('username','=',inputSearch));
-    console.log(searchData);
-    let s = query(searchData);
-   fetchedData = await getDocs(s);
-    console.log(fetchedData);
-    fetchedData.forEach((doc) => {
-      arr4 = doc.data();
-      newarr2.push(arr4);
-      console.log(newarr2);
-    });
-    setSearch(newarr2);
-  }, [inputSearch]);
+  let fetchedData;
+  let arr4=[];
+  let newarr2=[];
+//Search
+let setSearch;
+const { Search } = Input;
+const onSearch = (myvalue) => {console.log(myvalue);
+setSearch=localStorage.setItem('search',myvalue)
+FireStoreSearch();
+}
+//Searching from FireBase
+const [allSearch,setAllSearch]=useState('');
 
-  console.log(search)
+const FireStoreSearch= async () => {
+  let needSearch=localStorage.getItem('search');
+  let searchData = query(collection(db, "users"),where('username','==',needSearch));
+  console.log(searchData);
+  let s = query(searchData);
+  fetchedData = await getDocs(s);
+  console.log(fetchedData);
+  fetchedData.forEach((doc) => {
+    arr4 = doc.data();
+    newarr2.push(arr4);
+    console.log(newarr2);
+  });
+  setAllSearch(newarr2);
+}
+console.log(allSearch);
 
   onAuthStateChanged(auth, (user) => {
     if (user) {

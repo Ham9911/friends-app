@@ -180,11 +180,6 @@ const normFile = (e) => {
                         <Button icon={<UploadOutlined />}>Click to upload</Button>
                     </Upload>
                 </Form.Item>
-                {/* <Form.Item {...buttonItemLayout}>
-                    <Button type="primary" htmlType="submit" style={{ marginRight: '10px' }}>Submit</Button>
-
-
-                </Form.Item> */}
         <Form.Item label="Username">
           <Space>
             <Form.Item
