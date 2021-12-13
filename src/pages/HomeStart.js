@@ -20,8 +20,34 @@ import { setUser } from "./SignInPage";
 import { AudioOutlined } from '@ant-design/icons';
 const HomeStart = () => {
   let presentUser;
+  let searchResult='';
+  let fetchedData=[];
+  const [inputSearch,setinputSearch]=useState('')
   const { Search } = Input;
-  const onSearch = searchvalue => console.log(searchvalue);
+  const onSearch = searchvalue => {
+  console.log(searchvalue);
+  setinputSearch(searchvalue);
+  }
+  const [search,setSearch]=useState('');
+let arr4=[];
+let newarr2=[];
+  useEffect(async () => {
+    console.log(inputSearch);
+    let searchData = query(collection(db,"users"),where('username','=',inputSearch));
+    console.log(searchData);
+    let s = query(searchData);
+   fetchedData = await getDocs(s);
+    console.log(fetchedData);
+    fetchedData.forEach((doc) => {
+      arr4 = doc.data();
+      newarr2.push(arr4);
+      console.log(newarr2);
+    });
+    setSearch(newarr2);
+  }, [inputSearch]);
+
+  console.log(search)
+
   onAuthStateChanged(auth, (user) => {
     if (user) {
       // User is signed in, see docs for a list of available properties
