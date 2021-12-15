@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Button,Input, Space } from "antd";
 import { getDownloadURL,ref, uploadBytes } from "firebase/storage"
+import Logo from './logoimage.png'
+import Imagetext from './friends.png'
 import {
   collection,
   query,
@@ -107,7 +109,7 @@ if (docSnap.exists()) {
 const deletePost= async (postuid)=>{
   console.log(postuid)
   await deleteDoc(doc(db, "Posts", postuid));
-  window. location. reload()
+  window.location.reload();
 
 }
 let fetchedpost;
@@ -131,35 +133,27 @@ let fetchedpost;
   return (
     <div className="main">
       <div className="top-bar">
-        <h1>Friends App</h1>
-      </div>
-      <div> 
-        <Button id="edit-Profile" onClick={onEditHandler}>
-          Edit Profile
-        </Button>
-        <Button id="signout" onClick={logoutHandler}>
-        Logout
-        </Button>
+        <span><img style={{height:'70px'}} src={Logo}></img></span><span><img style={{height:'60px'}} src={Imagetext}></img></span>
+        <Search style={{float:"right"}} placeholder="input search text" onSearch={onSearch} style={{ width: 200 }} />
       </div>
       <div className='intro-section'>
-        <div id="intro">
+      <img className='profileimage' src={myUsers.profileimage} style={{width:'200px', height:'200px'}}></img>
+        <div id="intro">   
           <div>
-            <img ></img>
-            <img src={myUsers.profileimage} style={{width:'200px', height:'200px'}}></img>
-          </div>
-          <div>
-            <h2 className="sub-heading">Intro</h2>
-          </div>
-          <div>
-            <div></div>
-            <div className="boxes">UserName: {myUsers.username}</div>
-            <div className="boxes">Date of Birth: {myUsers.dob}</div>
-            <div className="boxes">Phone No: {myUsers.contactno}</div>
-            <div className="boxes">About: {myUsers.about}</div>
+            <div className="user-name">{myUsers.username}</div>
+            <div ><img style={{paddingLeft:'20px',paddingBottom:'10px'}}src="https://img.icons8.com/fluency/48/000000/age.png"/> {myUsers.dob}</div>
+            <div ><img style={{paddingLeft:'20px',paddingBottom:'10px'}} src="https://img.icons8.com/fluency/48/000000/phone-disconnected.png"/> {myUsers.contactno}</div>
+            <div><img  style={{paddingLeft:'20px',paddingBottom:'10px'}} src="https://img.icons8.com/fluency/48/000000/about.png"/> {myUsers.about}</div>
+            <Button style={{margin:'20px 0px 30px 20px'}} onClick={onEditHandler}>
+          Edit Profile
+        </Button>
+        <Button style={{margin:'20px 0px 30px 30px'}} onClick={logoutHandler}>
+        Logout
+        </Button>
           </div>
         </div>
       </div>
-      <Search placeholder="input search text" onSearch={onSearch} style={{ width: 200 }} />
+      
       <span><Button style={{marginBottom:'4px'}} onClick={addpostHandler}>Add Post</Button></span>
       <div className='post-section'>
       <div>

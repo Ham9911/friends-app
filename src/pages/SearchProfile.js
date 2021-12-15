@@ -58,8 +58,7 @@ const SearchProfile = () => {
       </div>
       <div className='intro-section'>
         <div id="intro">
-          <div>
-            <img ></img>
+          <div className='profileimage'>
             <img src={searchedUser.profileimage} style={{width:'200px', height:'200px'}}></img>
           </div>
           <div>
