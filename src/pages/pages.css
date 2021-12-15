@@ -52,6 +52,9 @@
     
 
 }
+#searchResult{
+  margin-bottom: 30px;
+}
 .intro-section .boxes{
     background-color: rgb(168, 168, 168);
         display: absolute;

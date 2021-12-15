@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Button,Input, Space } from "antd";
 import { getDownloadURL,ref, uploadBytes } from "firebase/storage"
-import { } from './FirebaseApp'
 import {
   collection,
   query,
@@ -14,6 +13,7 @@ import {
   onAuthStateChanged,
   db,
   doc,
+ deleteDoc
 } from "./FirebaseApp";
 import "./pages.css";
 import { setUser } from "./SignInPage";
@@ -31,8 +31,13 @@ const onSearch = (myvalue) => {console.log(myvalue);
 setSearch=localStorage.setItem('search',myvalue)
 FireStoreSearch();
 }
+const onSearchHandler=(uid)=>{
+  let clickedProfile=uid;
+  console.log('clicked')
+  navigate(`/${clickedProfile}`);
+  }
 //Searching from FireBase
-const [allSearch,setAllSearch]=useState('');
+const [allSearch,setAllSearch]=useState([]);
 
 const FireStoreSearch= async () => {
   let needSearch=localStorage.getItem('search');
@@ -99,6 +104,12 @@ if (docSnap.exists()) {
   console.log(myUsers);
  let arr2=[];
 //For Post
+const deletePost= async (postuid)=>{
+  console.log(postuid)
+  await deleteDoc(doc(db, "Posts", postuid));
+  window. location. reload()
+
+}
 let fetchedpost;
   let arr3 = [];
   let newarr = [];
@@ -150,7 +161,26 @@ let fetchedpost;
       </div>
       <Search placeholder="input search text" onSearch={onSearch} style={{ width: 200 }} />
       <span><Button style={{marginBottom:'4px'}} onClick={addpostHandler}>Add Post</Button></span>
-      
+      <div className='post-section'>
+      <div>
+        <h2 className="sub-heading">Search Results</h2>
+      </div>
+      <div class="forbackground">
+      {allSearch.map((mysearch,index)=>{
+        console.log(mysearch);
+       
+              return(
+              <div id="searchResult"> 
+                <div style={{maxWidth:'auto'}}><img src={mysearch.profileimage} style={{width:'200px',height:'150px'}}></img></div>
+                <div className="boxes">User Name: {mysearch.username} </div>
+              <div className="boxes">About: {mysearch.about}</div>
+              <div id='username' className="boxes">Uid: {mysearch.uid}</div>
+             <Button type='submit' onClick={()=>{onSearchHandler(mysearch.uid)}} style={{marginTop:'10px'}}>View Profile</Button>
+              </div>  
+              )
+          })}
+      </div>
+      </div>
 <div className='post-section'>
       <div>
         <h2 className="sub-heading">My Posts</h2>
@@ -160,16 +190,18 @@ let fetchedpost;
         console.log(posts);
        
               return(
-              <div> 
-                <div className="boxes"><img src={posts.image} style={{width:'200px',height:'150px'}}></img></div>
+              <div style={{marginTop:'10px'}}> 
+                <div ><img src={posts.image} style={{width:'200px',height:'150px'}}></img></div>
                 <div className="boxes">Post Title: {posts.title}</div>
               <div className="boxes">Created By: {posts.createdby}</div>
              <div  className="boxes"> Post content:{posts.content}</div>
+              <Button style={{marginTop:'10px'}} onClick={()=>{deletePost(posts.title)}}>Delete Post</Button>
               </div>  
               )
           })}
       </div>
       </div>
+
     </div>
   );
 };
