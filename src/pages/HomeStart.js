@@ -162,11 +162,11 @@ console.log(allpost);
 
        
               return(
-              <div style={{marginTop:'10px'}}> 
-               <div>{posts.createdby}</div>
-                <div ><img src={posts.image} style={{width:'200px',height:'150px'}}></img></div>
-                <div className="boxes">Post Title: {posts.title}</div>
-             <div  className="boxes"> Post content:{posts.content}</div>
+              <div className={'postDiv'}style={{marginTop:'10px'}}> 
+               <div className="postedBy">{posts.createdby}</div>
+               <div className="postTitle">{posts.title}</div>
+                <div ><img className="postImage" src={posts.image} style={{width:'500px',height:'400px'}}></img></div>
+             <div  className="postContent"> {posts.content}</div>
              
               </div>  
               )
