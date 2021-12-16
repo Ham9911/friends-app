@@ -10,6 +10,8 @@ import {
   storageRef,
   onAuthStateChanged,
   setDoc,
+  deleteDoc,
+  where
 } from "./FirebaseApp";
 import React from "react";
 import {
@@ -144,28 +146,32 @@ const Posts = () => {
     addDoc(postsRef, post);
   };
 
-  //fetched Posts
-  let fetchedpost;
-  let arr = [];
+  //For Post
+const deletePost= async (postuid)=>{
+  console.log(postuid)
+  await deleteDoc(doc(db, "Posts", postuid));
+  window.location.reload();
+
+}
+const [allpost, setallPost] = useState([]);
+let fetchedpost;
+  let arr3 = [];
   let newarr = [];
-  const [allpost, setallPost] = useState([]);
   useEffect(async () => {
-    let postData = collection(db, "Posts");
+    let postData = query(collection(db, "Posts"),where('uid','==',currUser));
     console.log(postData);
     let q = query(postData);
 
     fetchedpost = await getDocs(q);
     console.log(fetchedpost);
     fetchedpost.forEach((doc) => {
-      arr = doc.data();
-      newarr.push(arr);
+      arr3 = doc.data();
+      newarr.push(arr3);
       console.log(newarr);
     });
     setallPost(newarr);
   }, []);
   console.log(allpost);
-
-
   return (
     <div>
       <div className="top-bar " style={{ fontSize: "30px" }}>
@@ -216,6 +222,7 @@ const Posts = () => {
                 <img src={data.image} style={{ width: "100px" }}></img>
               </div>
               <div> Post content:{data.content}</div>
+              <Button style={{marginTop:'10px'}} onClick={()=>{deletePost(data.title)}}>Delete Post</Button>
             </div>
           );
         })}

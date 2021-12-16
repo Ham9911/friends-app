@@ -87,7 +87,7 @@ presentUser=user.email;
   }
   const addpostHandler=()=>{  navigate("/Posts");}
   const [myUsers, setMyUsers] = useState([]);
-  const [allpost, setallPost] = useState([]);
+  
   
   let arr = [];
  console.log(presentUser)
@@ -105,32 +105,30 @@ if (docSnap.exists()) {
 }
 }, []);
   console.log(myUsers);
- let arr2=[];
-//For Post
-const deletePost= async (postuid)=>{
-  console.log(postuid)
-  await deleteDoc(doc(db, "Posts", postuid));
-  window.location.reload();
-
-}
+ let arr6=[];
+//fetched Posts
 let fetchedpost;
-  let arr3 = [];
-  let newarr = [];
-  useEffect(async () => {
-    let postData = query(collection(db, "Posts"),where('uid','==',currUser));
-    console.log(postData);
-    let q = query(postData);
+let arr2 = [];
+let newarr = [];
+const [allpost, setallPost] = useState([]);
+useEffect(async () => {
+  let postData = collection(db, "Posts");
+  console.log(postData);
+  let q = query(postData);
 
-    fetchedpost = await getDocs(q);
-    console.log(fetchedpost);
-    fetchedpost.forEach((doc) => {
-      arr3 = doc.data();
-      newarr.push(arr3);
-      console.log(newarr);
-    });
-    setallPost(newarr);
-  }, []);
-  console.log(allpost);
+  fetchedpost = await getDocs(q);
+  console.log(fetchedpost);
+  fetchedpost.forEach((doc) => {
+    arr6 = doc.data();
+    newarr.push(arr6);
+    console.log(newarr);
+  });
+  setallPost(newarr);
+}, []);
+console.log(allpost);
+//
+
+
   return (
     <div className="main">
       <div className="top-bar">
@@ -156,19 +154,20 @@ let fetchedpost;
             </div>
           <div className={`post-section ${show ? 'none':'' }`}>
       <div>
-        <span><Button style={{marginBottom:'4px'}} onClick={addpostHandler}>Add Post</Button></span>
+       
       </div>
       <div>
       {allpost.map((posts,index)=>{
         console.log(posts);
+
        
               return(
               <div style={{marginTop:'10px'}}> 
+               <div>{posts.createdby}</div>
                 <div ><img src={posts.image} style={{width:'200px',height:'150px'}}></img></div>
                 <div className="boxes">Post Title: {posts.title}</div>
-              <div className="boxes">Created By: {posts.createdby}</div>
              <div  className="boxes"> Post content:{posts.content}</div>
-              <Button style={{marginTop:'10px'}} onClick={()=>{deletePost(posts.title)}}>Delete Post</Button>
+             
               </div>  
               )
           })}
@@ -188,6 +187,7 @@ let fetchedpost;
         <Button style={{margin:'20px 0px 30px 30px'}} onClick={logoutHandler}>
         Logout
         </Button>
+        <span><Button style={{margin:'20px 0px 30px 30px'}} onClick={addpostHandler}>Add Post</Button></span>
           </div>
         </div>
       </div>
