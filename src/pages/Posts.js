@@ -143,6 +143,8 @@ const Posts = () => {
     console.log(postsRef);
     addDoc(postsRef, post);
   };
+
+  //fetched Posts
   let fetchedpost;
   let arr = [];
   let newarr = [];
@@ -162,9 +164,7 @@ const Posts = () => {
     setallPost(newarr);
   }, []);
   console.log(allpost);
-  //For Image Upload
 
-  //for Image download
 
   return (
     <div>

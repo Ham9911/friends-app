@@ -28,9 +28,11 @@ const HomeStart = () => {
   let newarr2=[];
 //Search
 let setSearch;
+const [show,setShow]=useState(false)
 const { Search } = Input;
 const onSearch = (myvalue) => {console.log(myvalue);
 setSearch=localStorage.setItem('search',myvalue)
+setShow(true);
 FireStoreSearch();
 }
 const onSearchHandler=(uid)=>{
@@ -40,7 +42,6 @@ const onSearchHandler=(uid)=>{
   }
 //Searching from FireBase
 const [allSearch,setAllSearch]=useState([]);
-
 const FireStoreSearch= async () => {
   let needSearch=localStorage.getItem('search');
   let searchData = query(collection(db, "users"),where('username','==',needSearch));
@@ -133,51 +134,29 @@ let fetchedpost;
   return (
     <div className="main">
       <div className="top-bar">
-        <span><img style={{height:'70px'}} src={Logo}></img></span><span><img style={{height:'60px'}} src={Imagetext}></img></span>
+        <span><img style={{height:'45px'}} src={Logo}></img></span><span><img style={{height:'45px'}} src={Imagetext}></img></span>
         <Search style={{float:"right"}} placeholder="input search text" onSearch={onSearch} style={{ width: 200 }} />
       </div>
       <div className='intro-section'>
       <img className='profileimage' src={myUsers.profileimage} style={{width:'200px', height:'200px'}}></img>
-        <div id="intro">   
-          <div>
-            <div className="user-name">{myUsers.username}</div>
-            <div ><img style={{paddingLeft:'20px',paddingBottom:'10px'}}src="https://img.icons8.com/fluency/48/000000/age.png"/> {myUsers.dob}</div>
-            <div ><img style={{paddingLeft:'20px',paddingBottom:'10px'}} src="https://img.icons8.com/fluency/48/000000/phone-disconnected.png"/> {myUsers.contactno}</div>
-            <div><img  style={{paddingLeft:'20px',paddingBottom:'10px'}} src="https://img.icons8.com/fluency/48/000000/about.png"/> {myUsers.about}</div>
-            <Button style={{margin:'20px 0px 30px 20px'}} onClick={onEditHandler}>
-          Edit Profile
-        </Button>
-        <Button style={{margin:'20px 0px 30px 30px'}} onClick={logoutHandler}>
-        Logout
-        </Button>
-          </div>
-        </div>
-      </div>
-      
-      <span><Button style={{marginBottom:'4px'}} onClick={addpostHandler}>Add Post</Button></span>
-      <div className='post-section'>
+       <div className={`search-section ${show ? '':'none' }`}>
+          <h2 className="sub-heading">Users</h2>
+        {allSearch.map((mysearch,index)=>{
+          console.log(mysearch);
+                return(
+                <div id="searchResult"> 
+                  <div style={{maxWidth:'auto'}}><img src={mysearch.profileimage} style={{width:'200px',height:'150px'}}></img></div>
+                  <div className="boxes">User Name: {mysearch.username} </div>
+                <div className="boxes">About: {mysearch.about}</div>
+                <div id='username' className="boxes">Uid: {mysearch.uid}</div>
+              <Button type='submit' onClick={()=>{onSearchHandler(mysearch.uid)}} style={{marginTop:'10px'}}>View Profile</Button>
+                </div>  
+                )
+            })}
+            </div>
+          <div className={`post-section ${show ? 'none':'' }`}>
       <div>
-        <h2 className="sub-heading">Search Results</h2>
-      </div>
-      <div class="forbackground">
-      {allSearch.map((mysearch,index)=>{
-        console.log(mysearch);
-       
-              return(
-              <div id="searchResult"> 
-                <div style={{maxWidth:'auto'}}><img src={mysearch.profileimage} style={{width:'200px',height:'150px'}}></img></div>
-                <div className="boxes">User Name: {mysearch.username} </div>
-              <div className="boxes">About: {mysearch.about}</div>
-              <div id='username' className="boxes">Uid: {mysearch.uid}</div>
-             <Button type='submit' onClick={()=>{onSearchHandler(mysearch.uid)}} style={{marginTop:'10px'}}>View Profile</Button>
-              </div>  
-              )
-          })}
-      </div>
-      </div>
-<div className='post-section'>
-      <div>
-        <h2 className="sub-heading">My Posts</h2>
+        <span><Button style={{marginBottom:'4px'}} onClick={addpostHandler}>Add Post</Button></span>
       </div>
       <div>
       {allpost.map((posts,index)=>{
@@ -194,6 +173,23 @@ let fetchedpost;
               )
           })}
       </div>
+      </div>
+
+     
+        <div id="intro">   
+          <div>
+            <div className="user-name">{myUsers.username}</div>
+            <div ><img style={{paddingLeft:'20px',paddingBottom:'10px'}}src="https://img.icons8.com/fluency/48/000000/age.png"/> {myUsers.dob}</div>
+            <div ><img style={{paddingLeft:'20px',paddingBottom:'10px'}} src="https://img.icons8.com/fluency/48/000000/phone-disconnected.png"/> {myUsers.contactno}</div>
+            <div><img  style={{paddingLeft:'20px',paddingBottom:'10px'}} src="https://img.icons8.com/fluency/48/000000/about.png"/> {myUsers.about}</div>
+            <Button style={{margin:'20px 0px 30px 20px'}} onClick={onEditHandler}>
+          Edit Profile
+        </Button>
+        <Button style={{margin:'20px 0px 30px 30px'}} onClick={logoutHandler}>
+        Logout
+        </Button>
+          </div>
+        </div>
       </div>
 
     </div>
