@@ -24,8 +24,11 @@ import {
 } from "antd";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { UploadOutlined } from "@ant-design/icons";
+import { useSelector,useDispatch} from 'react-redux'
+import { setMyPosts } from "../store";
 import { useEffect, useState } from "react";
 const Posts = () => {
+  const dispatch = useDispatch();
   let post = {
     uid: "",
     title: "",
@@ -153,11 +156,12 @@ const deletePost= async (postuid)=>{
   window.location.reload();
 
 }
-const [allpost, setallPost] = useState([]);
 let fetchedpost;
   let arr3 = [];
   let newarr = [];
+ const allpost=useSelector(state=> state.myposts);
   useEffect(async () => {
+ 
     let postData = query(collection(db, "Posts"),where('uid','==',currUser));
     console.log(postData);
     let q = query(postData);
@@ -169,7 +173,7 @@ let fetchedpost;
       newarr.push(arr3);
       console.log(newarr);
     });
-    setallPost(newarr);
+    dispatch(setMyPosts(newarr));
   }, []);
   console.log(allpost);
   return (

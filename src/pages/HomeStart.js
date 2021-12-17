@@ -3,7 +3,8 @@ import { auth, signOut } from "./FirebaseApp";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Button,Input, Space } from "antd";
-import { getDownloadURL,ref, uploadBytes } from "firebase/storage"
+import { useSelector,useDispatch} from 'react-redux'
+import { setShow,setAllSearch,setMyUser,setAllPosts } from "../store";
 import Logo from './logoimage.png'
 import Imagetext from './friends.png'
 import {
@@ -15,7 +16,6 @@ import {
   onAuthStateChanged,
   db,
   doc,
- deleteDoc
 } from "./FirebaseApp";
 import "./pages.css";
 import { setUser } from "./SignInPage";
@@ -28,11 +28,13 @@ const HomeStart = () => {
   let newarr2=[];
 //Search
 let setSearch;
-const [show,setShow]=useState(false)
+const dispatch=useDispatch();
+const showValue=useSelector(state=> state.status);
+console.log(showValue);
 const { Search } = Input;
 const onSearch = (myvalue) => {console.log(myvalue);
 setSearch=localStorage.setItem('search',myvalue)
-setShow(true);
+dispatch(setShow(true));
 FireStoreSearch();
 }
 const onSearchHandler=(uid)=>{
@@ -41,7 +43,7 @@ const onSearchHandler=(uid)=>{
   navigate(`/${clickedProfile}`);
   }
 //Searching from FireBase
-const [allSearch,setAllSearch]=useState([]);
+const showSearchResults=useSelector(state=> state.search);
 const FireStoreSearch= async () => {
   let needSearch=localStorage.getItem('search');
   let searchData = query(collection(db, "users"),where('username','==',needSearch));
@@ -54,9 +56,9 @@ const FireStoreSearch= async () => {
     newarr2.push(arr4);
     console.log(newarr2);
   });
-  setAllSearch(newarr2);
+  dispatch(setAllSearch(newarr2));
 }
-console.log(allSearch);
+console.log(showSearchResults);
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -86,9 +88,7 @@ presentUser=user.email;
     navigate('/');
   }
   const addpostHandler=()=>{  navigate("/Posts");}
-  const [myUsers, setMyUsers] = useState([]);
-  
-  
+  const myUsers=useSelector(state=> state.user);
   let arr = [];
  console.log(presentUser)
   useEffect(async () => {
@@ -98,7 +98,7 @@ const docSnap = await getDoc(docRef);
 if (docSnap.exists()) {
   console.log("Document data:", docSnap.data());
   arr=docSnap.data();
-  setMyUsers(arr);
+  dispatch(setMyUser(arr));
 } else {
   // doc.data() will be undefined in this case
   console.log("No such document!");
@@ -110,7 +110,7 @@ if (docSnap.exists()) {
 let fetchedpost;
 let arr2 = [];
 let newarr = [];
-const [allpost, setallPost] = useState([]);
+const allpost=useSelector(state=> state.posts);
 useEffect(async () => {
   let postData = collection(db, "Posts");
   console.log(postData);
@@ -123,7 +123,7 @@ useEffect(async () => {
     newarr.push(arr6);
     console.log(newarr);
   });
-  setallPost(newarr);
+  dispatch(setAllPosts(newarr));
 }, []);
 console.log(allpost);
 //
@@ -137,9 +137,9 @@ console.log(allpost);
       </div>
       <div className='intro-section'>
       <img className='profileimage' src={myUsers.profileimage} style={{width:'200px', height:'200px'}}></img>
-       <div className={`search-section ${show ? '':'none' }`}>
+       <div className={`search-section ${showValue ? '':'none' }`}>
           <h2 className="sub-heading">Users</h2>
-        {allSearch.map((mysearch,index)=>{
+        {showSearchResults.map((mysearch,index)=>{
           console.log(mysearch);
                 return(
                 <div id="searchResult"> 
@@ -152,7 +152,7 @@ console.log(allpost);
                 )
             })}
             </div>
-          <div className={`post-section ${show ? 'none':'' }`}>
+          <div className={`post-section ${showValue ? 'none':'' }`}>
       <div>
        
       </div>
