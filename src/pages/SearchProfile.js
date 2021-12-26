@@ -12,6 +12,8 @@ import {
   doc,
 } from "./FirebaseApp";
 import "./pages.css";
+import Logo from './logoimage.png'
+import Imagetext from './friends.png'
 
 const SearchProfile = () => {
     const [searchedUser,setSearchedUser]=useState('');
@@ -51,25 +53,18 @@ const SearchProfile = () => {
   }, []);
   console.log(allpost)
     return (
-        <div>
-            This is Param Page {param.username}
+        <div className='main'>
             <div className="top-bar">
-        <h1>Friends App</h1>
+        <span><img style={{height:'45px'}} src={Logo}></img></span><span><img style={{height:'45px'}} src={Imagetext}></img></span>
       </div>
-      <div className='intro-section'>
-        <div id="intro">
-          <div className='profileimage'>
-            <img src={searchedUser.profileimage} style={{width:'200px', height:'200px'}}></img>
-          </div>
+      <div className='searched-section'>
+      <div id="searchedProfile">   
           <div>
-            <h2 className="sub-heading">Intro</h2>
-          </div>
-          <div>
-            <div></div>
-            <div className="boxes">UserName: {searchedUser.username}</div>
-            <div className="boxes">Date of Birth: {searchedUser.dob}</div>
-            <div className="boxes">Phone No: {searchedUser.contactno}</div>
-            <div className="boxes">About: {searchedUser.about}</div>
+          <img className='searchedProfileImage' src={searchedUser.profileimage} style={{width:'200px', height:'200px'}}></img>
+            <div className="user-name">{searchedUser.username}</div>
+            <div ><img style={{paddingLeft:'20px',paddingBottom:'10px'}}src="https://img.icons8.com/fluency/48/000000/age.png"/> {searchedUser.dob}</div>
+            <div ><img style={{paddingLeft:'20px',paddingBottom:'10px'}} src="https://img.icons8.com/fluency/48/000000/phone-disconnected.png"/> {searchedUser.contactno}</div>
+            <div><img  style={{paddingLeft:'20px',paddingBottom:'10px'}} src="https://img.icons8.com/fluency/48/000000/about.png"/> {searchedUser.about}</div>
           </div>
         </div>
       </div>

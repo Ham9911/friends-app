@@ -75,6 +75,21 @@ padding: 0 0 0 25px;
     rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
     rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset; */
 }
+#searchedProfile{
+  width: 26%;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: left;
+        align-items: left;
+        margin: 0px 0px 0px 15px;
+        padding-top: 2%;
+        border: 1px solid White;
+        border-radius: 15px;
+        background: white;
+        box-shadow: 0px 0px 2px grey;
+        float: left;
+}
 #edit-Profile {
   position: absolute;
   right: 80px;
@@ -128,6 +143,17 @@ padding: 0 0 0 25px;
   padding: 1%;
   background-color: white;
 }
+.searchedProfileImage{
+  margin:0 0 0 80px;
+  height: 25px;
+  width: 25px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: unset;
+  border-color: black;
+  padding: 1%;
+  background-color: white;
+  }
 .ant-input-group-wrapper.ant-input-search {
   float: center;
   padding: 0%;
@@ -153,7 +179,7 @@ padding: 0 0 0 25px;
     padding: 0px 0px 15px 0px;
   }
   .postContent{
-        font-size: 15px;
+        font-size: 20px;
         text-align: left;
         padding: 0px 0px 15px 0px;
   }
@@ -189,4 +215,19 @@ padding: 0 0 0 25px;
 
 .ant-form-item-control-input {
   width: 100%;
+}
+
+.post-section-form{
+  float:left;
+  margin-top:30px;
+  width: 100%;
+}
+.postAlign{
+  background-color: rgb(168, 168, 168);
+  display: absolute;
+  margin: 14px 13px 20px 150px;
+  border: 1px solid White;
+  border-radius: 0px grey;
+  background: white;
+  box-shadow: 0px 0px 2px grey;
 }

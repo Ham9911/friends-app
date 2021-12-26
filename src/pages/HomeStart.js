@@ -165,7 +165,7 @@ console.log(allpost);
               <div className={'postDiv'}style={{marginTop:'10px'}}> 
                <div className="postedBy">{posts.createdby}</div>
                <div className="postTitle">{posts.title}</div>
-                <div ><img className="postImage" src={posts.image} style={{width:'500px',height:'400px'}}></img></div>
+                <div ><img className="postImage" src={posts.image} style={{width:'570px',height:'450px'}}></img></div>
              <div  className="postContent"> {posts.content}</div>
              
               </div>  

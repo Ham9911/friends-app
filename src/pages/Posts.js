@@ -27,6 +27,8 @@ import { UploadOutlined } from "@ant-design/icons";
 import { useSelector,useDispatch} from 'react-redux'
 import { setMyPosts } from "../store";
 import { useEffect, useState } from "react";
+import Logo from './logoimage.png'
+import Imagetext from './friends.png'
 const Posts = () => {
   const dispatch = useDispatch();
   let post = {
@@ -179,10 +181,11 @@ let fetchedpost;
   return (
     <div>
       <div className="top-bar " style={{ fontSize: "30px" }}>
-        Posts
+      <span><img style={{height:'45px'}} src={Logo}></img></span><span><img style={{height:'45px'}} src={Imagetext}></img></span>
       </div>
       <div>
-        <Form {...layout} name="nest-messages" onFinish={onFinish} form={form}>
+        <Form className="post-section-form"{...layout} name="nest-messages" onFinish={onFinish} form={form}>
+        <span style={{margin:'0 0 20px 273px',fontSize:'38px'}}>Add Posts</span>
           <Form.Item
             name="upload"
             label="Upload"
@@ -196,11 +199,11 @@ let fetchedpost;
               multiple={false}
               maxCount={1}
             >
-              <Button icon={<UploadOutlined />}>Click to upload</Button>
+              <Button style={{alignContent:'left'}}icon={<UploadOutlined />}>Click to upload</Button>
             </Upload>
           </Form.Item>
           <Form.Item name="post" label="Title">
-            <Input />
+          <Input />
           </Form.Item>
           <Form.Item name={["content"]} label="Content">
             <Input.TextArea />
@@ -212,20 +215,19 @@ let fetchedpost;
           </Form.Item>{" "}
         </Form>
       </div>
-      <div>
-        <h2>All Posts</h2>
-      </div>
-      <div>
+      <div className="">
+
+     <span style={{margin:'0 0 20px 273px',fontSize:'38px'}}>All Posts</span>
+      
         {allpost.map((data) => {
           return (
-            <div>
-              {" "}
-              <div>Post Title: {data.title}</div>
-              <div>Created By: {data.createdby}</div>
+            <div className="postDiv postAlign">
+              <div className="postedBy">Created By: {data.createdby}</div>
+              <div className="postTitle">Post Title: {data.title}</div>
               <div>
-                <img src={data.image} style={{ width: "100px" }}></img>
+                <img src={data.image} style={{ width:'900px',height:'600px'}}></img>
               </div>
-              <div> Post content:{data.content}</div>
+              <div className="postContent">{data.content}</div>
               <Button style={{marginTop:'10px'}} onClick={()=>{deletePost(data.title)}}>Delete Post</Button>
             </div>
           );
