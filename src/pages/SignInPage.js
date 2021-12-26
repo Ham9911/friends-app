@@ -7,6 +7,9 @@ import { UserOutlined, LockOutlined,LoginOutlined } from '@ant-design/icons';
 import './pages.css'
 import { Link } from 'react-router-dom';
 import { auth, signInWithEmailAndPassword,collection,addDoc,onAuthStateChanged, db } from "./FirebaseApp";
+import Logo from './logoimage.png'
+import Imagetext from './friends.png'
+
 let setUser=()=>{}
 const SignInPage = () => {
   let navigate = useNavigate()
@@ -59,6 +62,7 @@ const SignInPage = () => {
         <div>
  <div className='container'>
       <div className='logo'>
+      <span><img style={{height:'45px'}} src={Logo}></img></span><span><img style={{height:'45px'}} src={Imagetext}></img></span>
         <h1 className='heading'>Login Page</h1>
         <Form
           name="normal_login"

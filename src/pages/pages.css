@@ -45,12 +45,12 @@ padding: 0 0 0 25px;
 }
 .container {
   width: 350px;
-  height: 400px;
+  height: 452px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: auto;
+  margin: 20px 0 0 450px;
   border: 2px solid White;
   border-radius: 15px;
   background: white;
@@ -205,7 +205,7 @@ padding: 0 0 0 25px;
 
 .heading {
   text-align: center;
-  padding-bottom: 20px;
+  padding: 30px 0 20px 0;
 }
 .logo {
   margin-bottom: 15px;

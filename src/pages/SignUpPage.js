@@ -4,6 +4,8 @@ import './pages.css'
 import { UserAddOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { auth, createUserWithEmailAndPassword,setDoc,doc,db } from './FirebaseApp';
+import Logo from './logoimage.png'
+import Imagetext from './friends.png'
 
 const SignUpPage = () => {
     let userDetails={};
@@ -37,6 +39,7 @@ const SignUpPage = () => {
       };
     return (
         <div className='container'>
+          <span><img style={{height:'45px'}} src={Logo}></img></span><span><img style={{height:'45px'}} src={Imagetext}></img></span>
         <h1 className='heading'>Signup Page</h1>
         <Form
       name="basic"
