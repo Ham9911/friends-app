@@ -22,12 +22,11 @@ const SignInPage = () => {
     console.log(email, password);
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Signed in 
         console.log(userCredential)
         const user = userCredential.user;
         console.log(user.email,user.password)
         navigate('/home')
-        // addUser(); //Set User On FireStore
+   
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -39,8 +38,7 @@ const SignInPage = () => {
       useEffect(()=>{
         onAuthStateChanged(auth, (user) => {
           if (user) {
-            // User is signed in, see docs for a list of available properties
-            // https://firebase.google.com/docs/reference/js/firebase.User
+         
             const email = user.email;
             const lastLoggedin=new Date();
             user.lastLoggedin=lastLoggedin;
@@ -55,15 +53,7 @@ const SignInPage = () => {
           }
         });
       },[])
-    //  //Adding User on FireStore
-    //   const addUser = async () => {
-    //     console.log(LoggedinUser);
-    //     let userRef = collection(db, 'user');
-    //     console.log(userRef)
-    //     await addDoc(userRef, LoggedinUser);
-    // }
 
-  
 
     return (
         <div>
