@@ -2,9 +2,9 @@ import React from "react";
 import { auth, signOut } from "./FirebaseApp";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Button,Input, Space } from "antd";
+import { Button,Input, Space,Menu,Affix } from "antd";
 import { useSelector,useDispatch} from 'react-redux'
-import { setShow,setAllSearch,setMyUser,setAllPosts } from "../store";
+import { setShow,setAllSearch,setLiveSearch,setMyUser,setAllPosts } from "../store";
 import Logo from './logoimage.png'
 import Imagetext from './friends.png'
 import {
@@ -20,18 +20,106 @@ import {
 import "./pages.css";
 import { setUser } from "./SignInPage";
 import { AudioOutlined } from '@ant-design/icons';
+import { Select } from 'antd';
+
+
 const HomeStart = () => {
   let presentUser;
   let searchResult='';
   let fetchedData;
+  let searchedData;
   let arr4=[];
   let newarr2=[];
+  let newarr3=[];
+  let arr5=[];
+  const dispatch=useDispatch();
+  const { Search } = Input;
+const { Option } = Select;
+  //Search Work
+  const [users, setUsers] = useState([])
+  const [current, setCurrent] = useState('home')
+  const [searchKeys, setSearchKeys] = useState('zzz')
+  //
+//Search Work
+let userArr = [];
+
+    useEffect(async () => {
+      let queryS = searchKeys;
+  queryS = queryS.split(" ").join("").toLowerCase();
+  console.log(queryS);
+  const qr = query(
+    collection(db, "users"),
+    where("username", ">=", queryS),
+    where("username", "<=", queryS+"\uf8ff")
+  );
+        const querySnapshot = await getDocs(qr);
+        querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            console.log(doc.data());
+            userArr.push(doc.data())
+        });
+        setUsers(userArr)
+    }, [searchKeys])
+
+    function handleChange(value) {
+        console.log(users[value]);
+        navigate(`/${users[value].uid}`);
+    }
+    const childrens = users.map((elem, i) => {
+        return <Option key={i} >{elem.username}</Option>
+    })
+
+    useEffect(() => {
+
+    }, [])
+    const SearchFunc = (val) => {
+        if (val === '') {
+            setSearchKeys('zzz')
+        } else {
+            setSearchKeys(val)
+
+        }
+    }
+
+
+
+//Search Work End
 //Search
 let setSearch;
-const dispatch=useDispatch();
+
 const showValue=useSelector(state=> state.status);
 console.log(showValue);
-const { Search } = Input;
+// const LiveStoreSearch = async (value) => {
+//   console.log(value);
+//   let queryS = value;
+//   queryS = queryS.split(" ").join("").toLowerCase();
+//   console.log(queryS);
+//   const qr = query(
+//     collection(db, "users"),
+//     where("username", ">=", queryS),
+//     where("username", "<=", queryS+"\uf8ff")
+//   );
+//   const querySnapshot = await getDocs(qr);
+//   setSearchedResult([]);
+//   querySnapshot.forEach((doc) => {
+//     setSearchedResult((val) => [...val, doc.data()]);
+//   });
+
+//   if (queryS.length === 0) {
+//     setSearchedResult([]);
+//   }
+// }; 
+// console.log(searchedResult);
+
+// console.log(searchKeys)
+// LiveStoreSearch(searchKeys)
+// const onchangeHandler=(e)=>{
+//   let value=e.target.value;
+// // setSearchedValue(e.target.value);
+// console.log(value)
+// LiveStoreSearch(value);
+
+// }
 const onSearch = (myvalue) => {console.log(myvalue);
 setSearch=localStorage.setItem('search',myvalue)
 dispatch(setShow(true));
@@ -42,7 +130,31 @@ const onSearchHandler=(uid)=>{
   console.log('clicked')
   navigate(`/${clickedProfile}`);
   }
-//Searching from FireBase
+
+//Live Searching
+
+// const LiveStoreSearch= async (value) => {
+//   let mySearchData = query(collection(db, "users"),where('username','>=',value));
+//   console.log(mySearchData);
+//   let sr = query(mySearchData);
+//   searchedData = await getDocs(sr);
+//   console.log(searchedData);
+//   searchedData.forEach((doc) => {
+//     arr5 = doc.data().username;
+//     console.log(arr5)
+    // newarr3.push(doc.data().username);
+    // console.log(newarr3);
+  // });
+ 
+  // dispatch(setLiveSearch(newarr3));
+  // function handleChange(value) {
+  //   console.log(searchedResult[value]);
+  //   navigate(`/users/${searchedResult[value].uid}`);
+  // }
+
+
+
+  // Searching from FireBase
 const showSearchResults=useSelector(state=> state.search);
 const FireStoreSearch= async () => {
   let needSearch=localStorage.getItem('search');
@@ -64,7 +176,7 @@ console.log(showSearchResults);
     if (user) {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/firebase.User
-      console.log(user);
+      // console.log(user);
       // console.log(email, lastLoggedin);
 localStorage.setItem('logginUser',user.uid)
 localStorage.setItem('user',user.email);
@@ -79,7 +191,7 @@ presentUser=user.email;
 
   let currUser=localStorage.getItem('logginUser')
   let navigate = useNavigate();
-  let LoggedinUser=setUser();
+  // let LoggedinUser=setUser();
   
   const onEditHandler = () => {
     navigate("/form");
@@ -104,7 +216,7 @@ if (docSnap.exists()) {
   console.log("No such document!");
 }
 }, []);
-  console.log(myUsers);
+  // console.log(myUsers);
  let arr6=[];
 //fetched Posts
 let fetchedpost;
@@ -125,15 +237,32 @@ useEffect(async () => {
   });
   dispatch(setAllPosts(newarr));
 }, []);
-console.log(allpost);
-//
+// console.log(allpost);
+// //
 
 
   return (
     <div className="main">
       <div className="top-bar">
         <span><img style={{height:'45px'}} src={Logo}></img></span><span><img style={{height:'45px'}} src={Imagetext}></img></span>
-        <Search style={{float:"right"}} placeholder="input search text" onSearch={onSearch} style={{ width: 200 }} />
+                        <Select showSearch={true}
+                            placeholder='Search Users'
+                            showArrow={false}
+                            className='searchSelect'
+                            defaultActiveFirstOption={false}
+                            onSearch={SearchFunc}
+                            style={{ width: '250px' }}
+                            onChange={handleChange}
+                            optionFilterProp="children"
+                            filterOption={(input, option) => {
+
+                                return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                            }
+                            }
+                        >
+                            {childrens}
+                        </Select>
+        {/* <Search style={{float:"right"}} onSearch={onSearch} placeholder="input search text"  style={{ width: 200 }} /> */}
       </div>
       <div className='intro-section'>
       <img className='profileimage' src={myUsers.profileimage} style={{width:'200px', height:'200px'}}></img>
@@ -158,7 +287,7 @@ console.log(allpost);
       </div>
       <div>
       {allpost.map((posts,index)=>{
-        console.log(posts);
+        // console.log(posts);
 
        
               return(
